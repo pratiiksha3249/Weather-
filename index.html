@@ -1,0 +1,182 @@
+<html lang="en"></html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            background: linear-gradient(135deg, #878bd0 0%, #5c62c6 100%);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* height: 100vh; */
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* margin-bottom: 20px; */
+        }
+
+        .input {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .searchField {
+            width: 100%;
+            padding: 5px;
+            font-size: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            font-size: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #6a1bbd;
+        }
+
+        .data {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        .id {
+            font-weight: bold;
+        }
+
+        .res {
+            color: #ffdf00;
+            font-size: 18px;
+        }
+
+        .image {
+            margin-top: 3px;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 200px;
+            }
+
+            .row {
+                font-size: 16px;
+            }
+
+            img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="main">
+            <div class="input">
+                <input name="searchTxt" type="text" maxlength="512" id="searchTxt" class="searchField" placeholder="Enter location" />
+            </div>
+            <div class="btn" onclick="getdata()">Submit</div>
+        </div>
+
+        <div class="data">
+            <div class="row">
+                <div class="id">Location: </div>
+                <div class="res" id="loc"></div>
+            </div>
+            <div class="row">
+                <div class="id">Weather: </div>
+                <div class="res" id="weather"></div>
+            </div>
+            <div class="row">
+                <div class="id">Temp: </div>
+                <div class="res" id="temp"></div>
+            </div>
+            <div class="row">
+                <div class="id">State: </div>
+                <div class="res" id="state"></div>
+            </div>
+
+            <div class="image">
+                <img id="imageId" src="https://cdn.weatherapi.com/weather/64x64/day/176.png" alt="Weather Icon" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getdata() {
+            
+            var input = document.getElementById("searchTxt").value;
+            let location = document.getElementById("loc");
+            let weather = document.getElementById("weather");
+            let temp = document.getElementById('temp');
+            let state = document.getElementById('state');
+            var image = document.getElementById('imageId')
+            const url = `https://weatherapi-com.p.rapidapi.com/current.json?q=${input}`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': 'ae1f22826emshd3c4f5f8c5a663fp175d2ejsn0525695c57d0',
+                    'x-rapidapi-host': 'weatherapi-com.p.rapidapi.com'
+                }
+            };
+
+            try {
+                const response = fetch(url, options).then(r => r.json()).then(t => {
+                    image.src = t.current.condition.icon;
+                    location.innerHTML = t.location.name;
+                    weather.innerHTML = t.current.condition.text;
+                    temp.innerHTML = t.current.temp_c + '°C';
+                    state.innerHTML = t.location.region;
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+
+</html>
